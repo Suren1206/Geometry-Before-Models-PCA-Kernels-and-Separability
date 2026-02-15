@@ -1,4 +1,4 @@
-# (A) About Dataset
+# About Dataset
 We intend to study the various ways in which data can be represented and see their impact on separability / classification
 
 UCI Breast Cancer (Wisconsin) was chosen which has ~30 numerical features (perfect PCA territory) & well known for studying margin, support vectors, and overconfidence.This dataset further serves the twin objectives of this project:
