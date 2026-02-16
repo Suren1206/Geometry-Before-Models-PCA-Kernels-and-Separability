@@ -1,19 +1,12 @@
 # Lessons Learnt
 
-(a) This project is focused on studying geometry-in-depth more than just finding a model which will provide best accuracy. So we embarked on a series of experiments to unearth geometric representation in various scenarios – which are listed  below
-
-(b) The baseline model for geometric representation is Linear SVC but we consciously included Logistic regression. Linear SVC is margin based while Logistic Regression is likelihood based; The fact both performed similarly proves that the dataset is not sensitive to boundary philosophy.
-
-(c) During PCA transformation, we had picked up 8 principle components which gave maximum accuracy compared to 4 pc and 12 pc. We had to pick up this one quite consciously since we found that  (a) the features are neither strongly collinear and that (b) among the 30 features, none can be clearly classified as redundant.
-
-(d) In order to see the visual impact of PCA, we chose only the first 2 principal components deliberately which constituted only 62% of the overall variation. We compared the PCA plot against the picture of  manually chosen features which can explain 90% of deviation. Very clearly the latter showed more skewness compared to the PCA plot but when we tried SVC model upon both these variations, we could see the classification is far from accurate under both the models
-
-(e) We also tried to swap the order of tasks – to perform PCA first before Train / Test split and compare the results against the standard process of splitting and then applying PCA. Since this dataset is quite a small one, there was no difference in accuracy metrics on account of data leakage.
-
-(f) While trying out Non linear kernels, we tried to compare the models with optimized principle components as well models without PCA. It was interesting to note that Linear SVC with PCA components provided an accuracy of   0.9825  & only 1 False Negative while RBF SVC without PCA matched this performance at 0.9737 accuracy with Nil False Negative. However RBF SVC needed approximately 3 times the number of support vectros that Linear SVC needed.
-
-(g) We introduced both the Polynomial and RBF kernel to study the geometic behaviour – former to test global nonlinear interactions and latter to test the local similarity structure. We found that Polynomial under-performed while RBF kernel without PCs brought results close to Linear SVC with PC  explaining that the underlying geometry is already close to linearly seprable once reasonably conditioned. 
-
-(h) Between the two non linear kernel, the impact of PCAs was another interesting observation. We found that neither of them drastically improved the results after the PCA transformation. We neither discovered any interaction-driven structure (if Polynomial had drastically improved) nor discovered cluster-driven non linearity (in case of substantial improvement in RBF)
-
-(i) When we tried the perturbed data set to have only 15% of Malignant records (against original 37 %), we found that the imbalance made the problem appear easier without fundamentally increasing geometric structure. Kernel methods did not uncover hidden nonlinear separability; instead, boundary complexity decreased as class tension reduced. (More details on perturbed data set experiment covered in Appendix)
+1) The dataset that we used for this project is curated to represent diagnostic decision geometry rather than population prevalence. However in order to study the impact of geometry on an imbalanced data set, we can make use of a perturbed data set which we had attempted in this project as well (covered in Appendix).
+2) Accuracy metrics need to be studied in conjunction with impact. False Negatives reported by a classifier need more focus when we analyze diagnosis of a fatal disease like cancer.
+3) Logistic regression behaves like a distribution-sensitive estimator, influenced by the entire likelihood structure, whereas linear SVC is margin-driven and influenced primarily by boundary cases.
+They both complement each other to gain a first-hand understanding about the boundary – whether it is margin-driven or probability-driven.
+4) LDA is based on distributional assumptions (Gaussian classes with equal covariance) and hence was kept out of scope for this project. This project deals with geometry under various modeling approaches and aims to pick the most representative one.
+5) LinearSVC and SVC(kernel=’linear’) are essentially not identical implementations since they differ in optimization method, regularization form and on use of support vectors. However, for a small dataset that we consider they both may give only similar results. For the sake of consistency and coding standardization we used SVC variants (linear, polynomial, RBF) all under the same libsvm framework.
+6) When we need more number of principal components to optimize accuracy, we may not be able to look at the impact of PCA visually. However, it would make sense to pick up the first two principal components alone to get a sense of the representational capacity though it may not be useful for model choice.
+7) Representation quality is not about picking “big” features. It is about how features combine directionally. We understood this by comparing a transformation of dataset with manually selected features against PCA transformation.
+8) When we use polynomial SVC, degree 3 is an appropriate choice to begin with because it introduces moderate nonlinearity. Degree 2 can model only simple curved boundaries while higher degrees may quickly become numerically unstable and overfit small datasets.
+9) When we try to work with a perturbed dataset for a classification problem, it is important to modify the number of rows – either add / reduce from the earlier dataset. Changing class labels for some of the records would amount to label distortion and may produce lopsided results during experimentation.
